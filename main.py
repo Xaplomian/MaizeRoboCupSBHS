@@ -6,26 +6,27 @@ from pybricks.parameters import (Port, Stop, Direction, Button, Color, SoundFile
 from pybricks.tools import print, wait, StopWatch
 from pybricks.robotics import DriveBase
 
-# Write your program here
 brick.sound.beep()
 left = Motor(Port.B)
 right = Motor(Port.C)
 robot = DriveBase(left, right, 50, 100)
-#ForwardSensor = UltrasonicSensor(Port.S1)
+#  ForwardSensor = UltrasonicSensor(Port.S1)
 cSensor = ColorSensor(Port.S2)
 LeftSensor = InfraredSensor(Port.S3)
 time = 0
-
+#  Made changes so that the robot goes forward, and when something in front of it, it stops and goes backwards the exact amount
 def forward(stopdist):
     robot.drive(-100, 0)
     stopdist = int(stopdist)
+    time_elapsed = 0
     while ForwardSensor.distance() > stopdist:
         wait(1)
+        time_elapsed += 1
     robot.stop()
+    return time_elapsed
 
-def colourchecker():
-    #Working now
-    while 1 == 1:
+def colour_checker(): #  Functional function
+    while True:
         currentcol = cSensor.color()
         if currentcol == Color.BLUE:
             brick.sound.file(SoundFile.BLUE)
@@ -49,29 +50,26 @@ def colourchecker():
             brick.sound.file(SoundFile.WHITE)
             print('White')
         else:
-            brick.sound.file(SoundFile.BOING)
+            brick.sound.file(SoundFile.BOING) #  Boing
             print('fail')
         wait(5000)
     
-def backward(time):
-    #Working
+def backward(time): #  Functional function
     robot.drive(100, 0)     
     wait(time)
 
-def rightturn():
-    #Working perhaps slightly off needs more precision testing
+def rightturn(): #  Functional function but not precise
     robot.drive_time(100, 90, 3100)
 
-def leftturn():
-    #Working perhaps slightly off needs more precision testing
+def leftturn(): #  Functional function but not precise
     robot.drive_time(-100, -90, 3100)
 
-#forward(200)
-#brick.sound.beep()
-#backward(2000)
-#brick.sound.beep()
-#rightturn()
-#brick.sound.beep()
-#leftturn()
-#brick.sound.beep()
-colourchecker()
+#  time_elapsed = forward(200)
+#  brick.sound.beep()
+#  backward(time_elapsed)
+#  brick.sound.beep()
+#  rightturn()
+#  brick.sound.beep()
+#  leftturn()
+#  brick.sound.beep()
+colour_checker()
