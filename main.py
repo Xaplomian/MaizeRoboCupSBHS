@@ -32,6 +32,8 @@ robot = DriveBase(left, right, 50, 100)
 |           | If U disagree a lot then comment somewhere 
 +-----------+
 '''
+#We need two colour sensors remember.
+
 leftSensor = None #UltrasonicSensor(Port.S1)
 colorSensor = ColorSensor(Port.S2)
 rightSensor = InfraredSensor(Port.S3)
