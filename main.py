@@ -180,6 +180,7 @@ at the entry position and earn bonus points there.
 
 '''driver code'''
 #  calibrate()
+#  pid_wall_follow()
 #  forward(200)
 #  brick.sound.beep()
 #  backward(2000)
