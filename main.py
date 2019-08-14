@@ -193,4 +193,3 @@ at the entry position and earn bonus points there.
 #  leftturn()
 #  brick.sound.beep()
 #  colour_checker()
-#  i ave aidez
