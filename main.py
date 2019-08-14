@@ -34,20 +34,18 @@ robot = DriveBase(left, right, 50, 100)
 |           | If U disagree a lot then comment somewhere 
 +-----------+
 '''
-#We need two colour sensors remember.
+#  We need two colour sensors remember.
 
-leftSensor = None #UltrasonicSensor(Port.S1)
+leftSensor = None #  UltrasonicSensor(Port.S1)
 colorSensor = ColorSensor(Port.S2)
 rightSensor = InfraredSensor(Port.S3)
-forwardSensor = None #InfraredSensor(Port.S4)
+forwardSensor = None #  InfraredSensor(Port.S4)
 time = 0
 MAX_DUTY = 100
 
 '''
 FUNCTION DEFINITIONS
 '''
-#  Made changes so that the robot goes forward, and when something 
-# in front of it, it stops and goes backwards the exact amount
 
 def calibrate():
     left.reset_angle(0); right.reset_angle(0)
@@ -100,7 +98,7 @@ def leftturn(): #  Functional function but not precise
     robot.drive_time(-100, -90, 3100)
 def retreat():
     #drives straight back when it stalls or meets black tile.
-    while robot.stalled() or colour_checker() == BLACK:
+    while robot.stalled() or colour_checker() == color.BLACK:
         brick.sound.beep(130, 500)
         robot.run_time(-100, 600)
 
