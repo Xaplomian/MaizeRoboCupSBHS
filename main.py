@@ -11,6 +11,7 @@ Licensed under GNU GPLv3
 #  Harry: I can't import pybricks for some reason
 #  Cyril: Read https://le-www-live-s.legocdn.com/sc/media/files/ev3-micropython/ev3micropythonv100-71d3f28c59a1e766e92a59ff8500818e.pdf, you need some other stuff as well that I think only James has.
 #  Cyril: If you don't have an ev3, just code here
+#  Cyril: Also the code for turning left and right shouldn't work, I shall comment my suggestion code
 from pybricks import ev3brick as brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor, InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import (Port, Stop, Direction, Button, Color, SoundFile, ImageFile, Align)
@@ -50,14 +51,14 @@ FUNCTION DEFINITIONS
 def calibrate():
     left.reset_angle(0); right.reset_angle(0)
     
-def forward(stopdist):
+def forward(stopdist): #  Functional
     robot.drive(-100, 0)
     stopdist = int(stopdist)
     while forwardSensor.distance() > stopdist:
         wait(1)
     robot.stop()
 
-def colour_checker(): #  Functional function
+def colour_checker(): #  Functional
 
     currentColor = colorSensor.color()
     if currentColor == Color.BLUE:
@@ -90,17 +91,28 @@ def colour_checker(): #  Functional function
 def backward(time): #  Functional function
     robot.drive(100, 0)     
     wait(time)
+    robot.stop()
 
 def rightturn(): #  Functional function but not precise
     robot.drive_time(100, 90, 3100)
+    #  left.run(-100)
+    #  right.run(100)
+    #  wait(some_time, we need to calculate how long it takes until it turns 90 degrees)
+    #  robot.stop(), or left.stop(); right.stop()
 
 def leftturn(): #  Functional function but not precise
     robot.drive_time(-100, -90, 3100)
+    #  left.run(100)
+    #  right.run(-100)
+    #  wait(some_time, we need to calculate how long it takes until it turns 90 degrees)
+    #  robot.stop(), or left.stop(); right.stop()
 def retreat():
-    #drives straight back when it stalls or meets black tile.
-    while robot.stalled() or colour_checker() == color.BLACK:
-        brick.sound.beep(130, 500)
-        robot.run_time(-100, 600)
+    #  drives straight back when it stalls or meets black tile.
+    if robot.stalled() or colour_checker() == color.BLACK:
+        robot.drive(100, 0)
+        while robot.stalled() or colour_checker() == color.BLACK:
+            wait(1)
+        robot.stop()
 
 def foundvictim():
     brick.light(color.RED)
