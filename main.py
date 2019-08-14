@@ -56,13 +56,12 @@ def calibrate():
     left.reset_angle(0); right.reset_angle(0)
     
 def forward(stopdist): #  Functional
-    global directions_made
     stopwatch.resume()
     robot.drive(-100, 0)
     stopdist = int(stopdist)
     while forwardSensor.distance() > stopdist:
         wait(1)
-     stopwatch.stop()
+    stopwatch.stop()
     robot.stop()
 
 def colour_checker(): #  Functional
@@ -100,21 +99,20 @@ def backward(time): #  Functional function
     wait(time)
     robot.stop()
 
-def rightturn(): #  Functional function but not precise
+def rightturn(): #  Testing required
     robot.drive_time(100, 90, 3100)
-    #  left.run(-100)
-    #  right.run(100)
-    #  wait(some_time, we need to calculate how long it takes until it turns 90 degrees)
-    #  robot.stop(), or left.stop(); right.stop()
+    left.run(-100)
+    right.run(100)
+    wait(500); #  Further calculations required
+    robot.stop(), or left.stop(); right.stop()
 
-def leftturn(): #  Functional function but not precise
-    robot.drive_time(-100, -90, 3100)
-    #  left.run(100)
-    #  right.run(-100)
-    #  wait(some_time, we need to calculate how long it takes until it turns 90 degrees)
-    #  robot.stop(), or left.stop(); right.stop()
+def leftturn(): #  Testing required
+    left.run(100)
+    right.run(-100)
+    wait(500) #  Further calculations required with time
+    left.stop(); right.stop()
 def retreat():
-    #  drives straight back when it stalls or meets black tile.
+    #  Drives straight back when it stalls or meets black tile.
     if robot.stalled() or colour_checker() == color.BLACK:
         robot.drive(100, 0)
         while robot.stalled() or colour_checker() == color.BLACK:
