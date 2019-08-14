@@ -8,7 +8,9 @@ Licensed under GNU GPLv3
 
 #!/usr/bin/env pybricks-micropython
 
-# Harry: I can't import pybricks for some reason
+#  Harry: I can't import pybricks for some reason
+#  Cyril: Read https://le-www-live-s.legocdn.com/sc/media/files/ev3-micropython/ev3micropythonv100-71d3f28c59a1e766e92a59ff8500818e.pdf, you need some other stuff as well that I think only James has.
+#  Cyril: If you don't have an ev3, just code here
 from pybricks import ev3brick as brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor, InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import (Port, Stop, Direction, Button, Color, SoundFile, ImageFile, Align)
