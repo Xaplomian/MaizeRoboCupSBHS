@@ -25,6 +25,7 @@ brick.sound.beep()
 left = Motor(Port.B)
 right = Motor(Port.C)
 robot = DriveBase(left, right, 50, 100)
+directions_made = []
 
 '''
 +----X-Y----+
@@ -47,15 +48,21 @@ MAX_DUTY = 100
 '''
 FUNCTION DEFINITIONS
 '''
+stopwatch = Stopwatch()
+stopwatch.pause()
+stopwatch.reset()
 
 def calibrate():
     left.reset_angle(0); right.reset_angle(0)
     
 def forward(stopdist): #  Functional
+    global directions_made
+    stopwatch.resume()
     robot.drive(-100, 0)
     stopdist = int(stopdist)
     while forwardSensor.distance() > stopdist:
         wait(1)
+     stopwatch.stop()
     robot.stop()
 
 def colour_checker(): #  Functional
