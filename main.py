@@ -56,12 +56,13 @@ def calibrate():
     left.reset_angle(0); right.reset_angle(0)
     
 def forward(stopdist): #  Functional
+    stopdist = int(stopdist)
     stopwatch.resume()
     robot.drive(-100, 0)
-    stopdist = int(stopdist)
     while forwardSensor.distance() > stopdist:
         wait(1)
-    stopwatch.stop()
+    time_elapsed = stopwatch.time()
+    stopwatch.pause(); stopwatch.reset()
     robot.stop()
 
 def colour_checker(): #  Functional
