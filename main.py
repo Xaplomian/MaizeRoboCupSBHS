@@ -149,7 +149,22 @@ def foundvictim():
     brick.sound.beep(noteG, 220, 85)
 
     brick.light(None)
-
+    
+def pid_wall_follow():
+    dist = leftSensor.distance()
+    kp, ki, kd, i, last_error = 1, 0, 0, 0, 0
+    target_val = 100 #  in mm, can adjust if needed
+    p = (target_value - dist)
+    i += p
+    d = p - last_error
+    u = (p*kp + i*ki + d*kd)
+    if u > 50:
+        u = 50
+    elif u < -50:
+        u = -50
+    left.run(-50 - u)
+    right.run(-50 + u)
+    
 '''
 TODO
 • We must make a function that tells it to scan along the left-hand
