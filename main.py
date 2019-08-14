@@ -104,7 +104,7 @@ def rightturn(): #  Testing required
     left.run(-100)
     right.run(100)
     wait(500); #  Further calculations required
-    robot.stop(), or left.stop(); right.stop()
+    left.stop(); right.stop()
 
 def leftturn(): #  Testing required
     left.run(100)
