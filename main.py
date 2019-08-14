@@ -48,15 +48,16 @@ FUNCTION DEFINITIONS
 '''
 #  Made changes so that the robot goes forward, and when something 
 # in front of it, it stops and goes backwards the exact amount
+
+def calibrate():
+    left.reset_angle(0); right.reset_angle(0)
+    
 def forward(stopdist):
     robot.drive(-100, 0)
     stopdist = int(stopdist)
-    time_elapsed = 0
     while forwardSensor.distance() > stopdist:
         wait(1)
-        time_elapsed += 1
     robot.stop()
-    return time_elapsed
 
 def colour_checker(): #  Functional function
 
@@ -107,6 +108,7 @@ def foundvictim():
     brick.light(color.RED)
     #plays the tune from 'Despacito'
     # Why? I have no idea.
+    #  HARRY REALLY?!?!?!
     noteG = 196
     noteB = 247
     noteC = 261
@@ -146,12 +148,13 @@ at the entry position and earn bonus points there.
 '''
 
 '''driver code'''
-# time_elapsed = forward(200)
-# brick.sound.beep()
-# backward(time_elapsed)
-# brick.sound.beep()
-# rightturn()
-# brick.sound.beep()
-# leftturn()
-# brick.sound.beep()
-# colour_checker()
+#  calibrate()
+#  forward(200)
+#  brick.sound.beep()
+#  backward(2000)
+#  brick.sound.beep()
+#  rightturn()
+#  brick.sound.beep()
+#  leftturn()
+#  brick.sound.beep()
+#  colour_checker()
