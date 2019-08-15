@@ -14,6 +14,12 @@ Cyril: Read https://le-www-live-s.legocdn.com/sc/media/files/ev3-micropython/ev3
 you need some other stuff as well that I think only James has.
 Cyril: If you don't have an ev3, just code here
 '''
+'''
+Tile Types:
+Silver: checkpoint
+Black: No-go
+Perhaps the silver tiles will return the value 'color.None'
+'''
 #  Cyril: Also the code for turning left and right shouldn't work, I shall comment my suggestion code
 from pybricks import ev3brick as brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor, InfraredSensor, UltrasonicSensor, GyroSensor)
@@ -65,22 +71,9 @@ def forward(stopdist): #  Functional
     robot.drive(-100, 0)
     while forwardSensor.distance() > stopdist:
         wait(1)
-    time_elapsed = stopwatch.time()
+    directions_made.append("forward", stopwatch.time())
     stopwatch.pause(); stopwatch.reset()
-    robot.stop()
-    if directions_made:
-        direction, time = directions_made[-1]
-        if direction == "back":
-            if time > time_elapsed:
-                directions_made[-1][-1] -= time_elapsed
-            elif time < time_elapsed:
-                del directions_made[-1]
-                directions_made.append((direction, time_elaped - time))
-            else:
-                del directions_made[-1]
-        elif direction == "forward":
-            directions_made[-1] += time_elapsed
-            
+    robot.stop()      
         
 
 def colour_checker(): #  Functional
@@ -89,28 +82,35 @@ def colour_checker(): #  Functional
     if currentColor == Color.BLUE:
         brick.sound.file(SoundFile.BLUE)
         print('Blue')
+        return "BLUE"
     elif currentColor == Color.BLACK:
         brick.sound.file(SoundFile.BLACK)
         print('Black')
+        return "BLACK"
     elif currentColor == Color.GREEN:
         brick.sound.file(SoundFile.GREEN)
         print('Green')
+        return "GREEN"
     elif currentColor == Color.YELLOW:
         brick.sound.file(SoundFile.YELLOW)
         print('Yellow')
+        return "YELLOW"
     elif currentColor == Color.RED:
         brick.sound.file(SoundFile.RED)
         print('Red')
+        return "RED"
     elif currentColor == Color.BROWN:
         brick.sound.file(SoundFile.BROWN)
         print('Brown')
+        return "BROWN"
     elif currentColor == Color.WHITE:
         brick.sound.file(SoundFile.WHITE)
         print('White')
+        return "WHITE"
     else:
         brick.sound.file(SoundFile.BOING) #  Boing
-        print('fail')
-    return currentColor
+        print(r'EROROROROKJIHRBFSITWFO#* #YRWOUPWOID')
+        return None
     
     
 def backward(time): #  Functional function
