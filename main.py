@@ -59,6 +59,7 @@ def calibrate():
     left.reset_angle(0); right.reset_angle(0)
     
 def forward(stopdist): #  Functional
+    global directions_made
     stopdist = int(stopdist)
     stopwatch.resume()
     robot.drive(-100, 0)
@@ -67,6 +68,20 @@ def forward(stopdist): #  Functional
     time_elapsed = stopwatch.time()
     stopwatch.pause(); stopwatch.reset()
     robot.stop()
+    if directions_made:
+        direction, time = directions_made[-1]
+        if direction == "back":
+            if time > time_elapsed:
+                directions_made[-1][-1] -= time_elapsed
+            elif time < time_elapsed:
+                del directions_made[-1]
+                directions_made.append((direction, time_elaped - time))
+            else:
+                del directions_made[-1]
+        elif direction == "forward":
+            directions_made[-1] += time_elapsed
+            
+        
 
 def colour_checker(): #  Functional
 
