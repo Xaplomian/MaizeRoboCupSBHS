@@ -1,154 +1,45 @@
-'''
-main.py
-code for the Rescue Robot for the Robocup Open Rescue competition
-by James Treloar, Harry Wu, Cyril Subramanian, Kalaish Stanley
-August 2019
-Licensed under GNU GPLv3
-'''
-
-#!/usr/bin/env pybricks-micropython
-
-#  Harry: I can't import pybricks for some reason
-'''
-Cyril: Read https://le-www-live-s.legocdn.com/sc/media/files/ev3-micropython/ev3micropythonv100-71d3f28c59a1e766e92a59ff8500818e.pdf, 
-you need some other stuff as well that I think only James has.
-Cyril: If you don't have an ev3, just code here
-'''
-'''
-Tile Types:
-Silver: checkpoint
-Black: No-go
-Perhaps the silver tiles will return the value 'color.None'
-'''
-#  Cyril: Also the code for turning left and right shouldn't work, I shall comment my suggestion code
 from pybricks import ev3brick as brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor, InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import (Port, Stop, Direction, Button, Color, SoundFile, ImageFile, Align)
 from pybricks.tools import print, wait, StopWatch
 from pybricks.robotics import DriveBase
 
+#  Notes:
+
 '''
-INITIALISING
+Tile Types:
+Silver: checkpoint
+Black: No-go
+Perhaps the silver tiles will return the value 'color.None'
 '''
+
+'''
++--Z-X-Y----+
+|W         Z| X = Downward Color Sensor (Port.S4, still need to get)
+|           | Y = Forward Ultrasonic Sensor (Port.S1)
+|           | W = Left Infrared Sensor, points at 45 deg to left (Port.S3)
+|           | Z = Forward Color Sensor (Port.S2)
+|           | Disagrements can go into the following suggestion box: https://images.homedepot-static.com/productImages/704006ac-aea7-47ca-ad08-48d62bedf38e/svn/rubbermaid-plastic-trash-cans-2008186-64_1000.jpg
++-----------+ (or in comments, preferrably the suggestions box)
+'''
+
 brick.sound.beep()
 left = Motor(Port.B)
 right = Motor(Port.C)
 robot = DriveBase(left, right, 50, 100)
-directions_made = []
-
-'''
-+----X-Y----+
-|W         Z| X = Color Sensor, points downwards
-|           | Y = Forward Sensor, points directly forwards
-|           | W = left Sensor, points at 45 deg to left
-|           | Z = right Sensor, points at 45 def to right
-|           | If U disagree a lot then comment somewhere 
-+-----------+
-'''
-#  We need two colour sensors remember.
-
-leftSensor = None #  UltrasonicSensor(Port.S1)
-colorSensor = ColorSensor(Port.S2)
-rightSensor = InfraredSensor(Port.S3)
-forwardSensor = None #  InfraredSensor(Port.S4)
+ForwardSensor = UltrasonicSensor(Port.S1)
+cSensor = ColorSensor(Port.S2)
+LeftSensor = InfraredSensor(Port.S3)
+TileDetector = None #  ColorSensor(Port.S4)
 time = 0
-MAX_DUTY = 100
 
-'''
-FUNCTION DEFINITIONS
-'''
-stopwatch = Stopwatch()
-stopwatch.pause()
-stopwatch.reset()
-
-def calibrate():
-    left.reset_angle(0); right.reset_angle(0)
-    
-def forward(stopdist): #  Functional
-    global directions_made
-    stopdist = int(stopdist)
-    stopwatch.resume()
-    robot.drive(-100, 0)
-    while forwardSensor.distance() > stopdist:
-        wait(1)
-    directions_made.append("forward", stopwatch.time())
-    stopwatch.pause(); stopwatch.reset()
-    robot.stop()      
-        
-
-def colour_checker(): #  Functional
-
-    currentColor = colorSensor.color()
-    if currentColor == Color.BLUE:
-        brick.sound.file(SoundFile.BLUE)
-        print('Blue')
-        return "BLUE"
-    elif currentColor == Color.BLACK:
-        brick.sound.file(SoundFile.BLACK)
-        print('Black')
-        return "BLACK"
-    elif currentColor == Color.GREEN:
-        brick.sound.file(SoundFile.GREEN)
-        print('Green')
-        return "GREEN"
-    elif currentColor == Color.YELLOW:
-        brick.sound.file(SoundFile.YELLOW)
-        print('Yellow')
-        return "YELLOW"
-    elif currentColor == Color.RED:
-        brick.sound.file(SoundFile.RED)
-        print('Red')
-        return "RED"
-    elif currentColor == Color.BROWN:
-        brick.sound.file(SoundFile.BROWN)
-        print('Brown')
-        return "BROWN"
-    elif currentColor == Color.WHITE:
-        brick.sound.file(SoundFile.WHITE)
-        print('White')
-        return "WHITE"
-    else:
-        brick.sound.file(SoundFile.BOING) #  Boing
-        print(r'EROROROROKJIHRBFSITWFO#* #YRWOUPWOID')
-        return None
-    
-    
-def backward(time): #  Functional function
-    robot.drive(100, 0)     
-    wait(time)
-    robot.stop()
-
-def rightturn(): #  Testing required
-    robot.drive_time(100, 90, 3100)
-    left.run(-100)
-    right.run(100)
-    wait(500); #  Further calculations required
-    left.stop(); right.stop()
-
-def leftturn(): #  Testing required
-    left.run(100)
-    right.run(-100)
-    wait(500) #  Further calculations required with time
-    left.stop(); right.stop()
-def retreat():
-    #  Drives straight back when it stalls or meets black tile.
-    if robot.stalled() or colour_checker() == color.BLACK:
-        robot.drive(100, 0)
-        while robot.stalled() or colour_checker() == color.BLACK:
-            wait(1)
-        robot.stop()
-
-def foundvictim():
-    brick.light(color.RED)
-    #plays the tune from 'Despacito'
-    # Why? I have no idea.
-    #  HARRY REALLY?!?!?!
+def foundvictim(): #  *sigh* Thanks Harry
     noteG = 196
     noteB = 247
     noteC = 261
     noteD = 293
     noteE = 330
-    #brick.sound.beep(frequency=500, duration=100, volume=30)
+    #  brick.sound.beep(frequency=500, duration=100, volume=30)
     brick.sound.beep(noteG, 200, 50)
     for i in range(3):
         wait(20)
@@ -159,7 +50,7 @@ def foundvictim():
     wait(20)
     brick.sound.beep(noteE, 420, 50)
     brick.sound.beep(noteC, 630, 50)
-    # last four notes
+    #  last four notes
     wait(100)
     brick.sound.beep(noteD, 440, 75)
     brick.sound.beep(noteC, 440, 75)
@@ -167,24 +58,42 @@ def foundvictim():
     brick.sound.beep(noteG, 220, 85)
 
     brick.light(None)
+
+def forward(stopdist):
+    robot.drive(-100, 0)
+    stopdist = int(stopdist)
+    while ForwardSensor.distance() > stopdist:
+        wait(1)
+    robot.stop()
     
-def pid_wall_follow():
-    dist = leftSensor.distance()
-    kp, ki, kd, i, last_error = 1, 0, 0, 0, 0
-    target_val = 100 #  in mm, can adjust if needed
-    p = (target_value - dist)
-    i += p
-    d = p - last_error
-    u = (p*kp + i*ki + d*kd)
-    if u > 50:
-        u = 50
-    elif u < -50:
-        u = -50
-    left.run(-50 - u)
-    right.run(-50 + u)
-    
+def backward(time):
+    robot.drive(100, 0)     
+    wait(time)
+
+def rightturn():
+    left.run(-50, 500)
+    right.run(50, 500)
+
+def leftturn():
+    left.run(50, 500)
+    right.run(-50, 500)
+
+
+
+
+forward(200)
+foundvictim()
+#  brick.sound.beep()
+#  MA.backward(2000)
+#  brick.sound.beep()
+rightturn()
+#  brick.sound.beep()
+leftturn()
+#  brick.sound.beep()
+#  colourchecker()
 '''
 TODO
+• GET COLOUR SENSOR!!!!!!!!!!!!!!!
 • We must make a function that tells it to scan along the left-hand
 side of the maze
 • We must check out how to use our sensors and finalise sensor position
@@ -196,15 +105,3 @@ Finally, we can write function to make it more likely for robot to exit
 at the entry position and earn bonus points there.
 '''
 
-'''driver code'''
-#  calibrate()
-#  pid_wall_follow()
-#  forward(200)
-#  brick.sound.beep()
-#  backward(2000)
-#  brick.sound.beep()
-#  rightturn()
-#  brick.sound.beep()
-#  leftturn()
-#  brick.sound.beep()
-#  colour_checker()
