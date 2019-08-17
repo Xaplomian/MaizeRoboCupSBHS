@@ -71,13 +71,12 @@ def backward(time):
     wait(time)
 
 def rightturn():
-    left.run(-50, 500)
-    right.run(50, 500)
+    left.run(-50, 1200)
 
 def leftturn():
-    left.run(50, 500)
-    right.run(-50, 500)
+    left.run(50, 1200)
 
+def main
 
 
 
