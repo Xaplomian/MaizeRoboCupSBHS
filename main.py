@@ -65,21 +65,49 @@ def main():
     Kp, Ki, Kd, i, last_error, target = 20, 0, 0, 0, 0, 5
     conveyor_belt = Motor(Port.A)
     conveyor_belt.run_time(-100, 1000)
+    directions_made = []
+    stopwatch = StopWatch(); stopwatch.resume()
+    driving_forward = False
     while True:
+        if stopwatch.time() >= 100000: #  OUR LAST HOPE FOR POINTS!!!!!
+            robot.stop()
+            if driving_forward:
+                directions_made.append(("forward", stopwatch.time() - start_time))
+            driving_forward = False
+            break
         if cSensor.color() and cSensor.color() != Color.WHITE:
             robot.stop()
+            if driving_forward:
+                directions_made.append(("forward", stopwatch.time() - start_time))
+            driving_forward = False
             conveyor_belt.run_time(-100, 500, Stop.BRAKE, False)
             foundvictim()
-        if LeftSensor.distance() >= 50:
+        if LeftSensor.distance() >= 40:
             wait(500)
             robot.stop()
-            leftturn()
-            robot.drive_time(-1000, 0, 1000)
+            if driving_forward:
+                directions_made.append(("forward", stopwatch.time() - start_time))
+            driving_forward = False
+            leftturn(); directions_made.append("left turn")
+            robot.drive_time(-1000, 0, 1000); directions_made.append(("forward", 1000))
         elif ForwardSensor.distance() <= 200:
             robot.stop()
-            rightturn()
+            if driving_forward:
+                directions_made.append(("forward", stopwatch.time() - start_time))
+            driving_forward = False
+            rightturn(); directions_made.append("right turn")
         else:
             robot.drive(-1000, 0)
+            driving_forward, start_time = True, stopwatch.time()
+    for direction in directions_made:
+        if direction == "left turn":
+            robot.stop()
+            rightturn()
+        elif direction == "right turn":
+            robot.stop()
+            leftturn()
+        else:
+            robot.drive_time(-1000, 0, direction[1])
 
 #forward(100)
 #backwardtest(500)
@@ -98,10 +126,8 @@ def main():
 #Testing
 
 wait(1000)
-foundvictim()
 main()
-rightturn()
-leftturn()
+'''
 while True:
     if Button.UP in brick.buttons():
         brick.sound.beep()
@@ -118,3 +144,4 @@ while True:
     else:
         brick.sound.file(SoundFile.SORRY)
     wait(500)  
+'''
