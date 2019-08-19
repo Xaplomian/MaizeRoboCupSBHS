@@ -19,31 +19,15 @@ LeftSensor = InfraredSensor(Port.S3)
 time = 0
 
 def foundvictim():
-    #plays the tune from 'Despacito'
-    # Why? I have no idea.
-    #  HARRY REALLY?!?!?!
-    noteG = 196
-    noteB = 247
-    noteC = 261
-    noteD = 293
-    noteE = 330
-    #brick.sound.beep(frequency=500, duration=100, volume=30)
-    brick.sound.beep(noteG, 200, 50)
-    for i in range(3):
-        wait(20)
-        brick.sound.beep(noteD, 200, 50)
-    wait(20)
-    brick.sound.beep(noteD, 420, 50)
-    brick.sound.beep(noteE, 200, 50)
-    wait(20)
-    brick.sound.beep(noteE, 420, 50)
-    brick.sound.beep(noteC, 630, 50)
-    # last four notes
-    wait(100)
-    brick.sound.beep(noteD, 440, 75)
-    brick.sound.beep(noteC, 440, 75)
-    brick.sound.beep(noteB, 220, 80)
-    brick.sound.beep(noteG, 220, 85)
+    notes = [(523, 1000), (494, 1000), (440, 500), (330, 500),
+    ("repeat", 5, 330), ("repeat", 3, 440), (440, 500), (392, 250), (440, 500), (494, 500)]
+    #  brick.sound.beep(frequency=500, duration=100, volume=30)
+    for note in notes:
+        if note[0] == "repeat":
+            for i in range(note[1]):
+                brick.sound.beep(note[2], 250)
+        else:
+            brick.sound.beep(note[0], note[1], 50)
 
     brick.light(None)
 
@@ -82,6 +66,10 @@ def main():
     conveyor_belt = Motor(Port.A)
     conveyor_belt.run_time(-100, 1000)
     while True:
+        if cSensor.color() and cSensor.color() != Color.WHITE:
+            robot.stop()
+            conveyor_belt.run_time(-100, 500, Stop.BRAKE, False)
+            foundvictim()
         if LeftSensor.distance() >= 50:
             wait(500)
             robot.stop()
@@ -110,6 +98,7 @@ def main():
 #Testing
 
 wait(1000)
+foundvictim()
 main()
 rightturn()
 leftturn()
