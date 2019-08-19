@@ -125,6 +125,7 @@ def main():
 
 #Testing
 
+foundvictim()
 wait(1000)
 main()
 '''
